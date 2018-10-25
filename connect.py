@@ -5,14 +5,12 @@ from oauth2client import file, client, tools
 
 import pandas as pd
 
-from private import SPREADSHEET_ID
-
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 
 # The ID and range of a sample spreadsheet.
 
-def main( spreadsheet_id, range_name ):
+def gsheet_to_dataframe( spreadsheet_id, range_name ):
     """Shows basic usage of the Sheets API.
     Prints values from a sample spreadsheet.
     """
@@ -24,7 +22,6 @@ def main( spreadsheet_id, range_name ):
     service = build('sheets', 'v4', http=creds.authorize(Http()))
 
     # Call the Sheets API
-    RANGE_NAME = 'Goal!A15:I'
     result = service.spreadsheets().values().get(spreadsheetId= spreadsheet_id,
                                                 range=range_name).execute()
     values = result.get('values', [])
@@ -35,5 +32,6 @@ def main( spreadsheet_id, range_name ):
         df_goals = df_goals.drop(df_goals.index[0])
         return df_goals
 
-""" if __name__ == '__main__':
-    main() """
+""" 
+if __name__ == '__main__':
+    gsheet_to_dataframe() """
