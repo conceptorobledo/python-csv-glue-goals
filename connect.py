@@ -32,6 +32,17 @@ def gsheet_to_dataframe( spreadsheet_id, range_name ):
         df_goals = df_goals.drop(df_goals.index[0])
         return df_goals
 
-""" 
+
 if __name__ == '__main__':
-    gsheet_to_dataframe() """
+    gsheet_to_dataframe() 
+
+
+def write_gsheet(spreadsheet_id, range_name, values):
+    body = {
+        'values': values
+    }
+    result = service.spreadsheets().values().update(
+        spreadsheetId=spreadsheet_id, range=range_name,
+        valueInputOption=value_input_option, body=body).execute()
+    return print('{0} cells updated.'.format(result.get('updatedCells')));
+    
