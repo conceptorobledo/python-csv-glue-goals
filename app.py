@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 from private import SPREADSHEET_ID, SHEET_RANGES, SS_TO_WRITE_ID
-from connect import gsheet_to_dataframe
+from connect import gsheet_to_dataframe, write_gsheet
 
 ##Cargar dataframes de gsheets
 df_goals = gsheet_to_dataframe(SPREADSHEET_ID,SHEET_RANGES['goal'])
@@ -34,4 +34,10 @@ print('----------- GOALS -----------')
 print(df_leadgoalcl.groupby('Source / Medium')['key'].count())
 
 # Tomar columnas para escribir
-result = df_leadgoal[['Month of Year','Day of the month','Source / Medium','Unique Events']].values.tolist()
+result = df_leadgoal[['Month of Year','Day of the month','Source / Medium','Unique Events']]
+
+sheet_headers = result.columns.values.tolist()
+sheet_values = result.values.tolist()
+sheet_values.insert(0, sheet_headers)
+
+write_gsheet(SS_TO_WRITE_ID,'Result!A1:D',sheet_values)

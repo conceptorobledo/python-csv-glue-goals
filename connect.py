@@ -5,21 +5,24 @@ from oauth2client import file, client, tools
 
 import pandas as pd
 
-# If modifying these scopes, delete the file token.json.
-SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
+## If modifying these scopes, delete the file token.json.
+SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 
-# The ID and range of a sample spreadsheet.
+store = file.Storage('token.json')
+creds = store.get()
+if not creds or creds.invalid:
+    flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
+    creds = tools.run_flow(flow, store)
+service = build('sheets', 'v4', http=creds.authorize(Http()))
 
 def gsheet_to_dataframe( spreadsheet_id, range_name ):
-    """Shows basic usage of the Sheets API.
-    Prints values from a sample spreadsheet.
-    """
-    store = file.Storage('token.json')
+
+    """ store = file.Storage('token.json')
     creds = store.get()
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
         creds = tools.run_flow(flow, store)
-    service = build('sheets', 'v4', http=creds.authorize(Http()))
+    service = build('sheets', 'v4', http=creds.authorize(Http())) """
 
     # Call the Sheets API
     result = service.spreadsheets().values().get(spreadsheetId= spreadsheet_id,
@@ -38,11 +41,12 @@ if __name__ == '__main__':
 
 
 def write_gsheet(spreadsheet_id, range_name, values):
+
     body = {
         'values': values
     }
     result = service.spreadsheets().values().update(
         spreadsheetId=spreadsheet_id, range=range_name,
-        valueInputOption=value_input_option, body=body).execute()
+        valueInputOption='RAW', body=body).execute()
     return print('{0} cells updated.'.format(result.get('updatedCells')));
     
