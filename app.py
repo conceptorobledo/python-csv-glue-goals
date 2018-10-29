@@ -4,6 +4,9 @@ import numpy as np
 from private import SPREADSHEET_ID, SHEET_RANGES, SS_TO_WRITE_ID
 from connect import gsheet_to_dataframe, write_gsheet
 
+# Toma data de Gsheets, cruza la información por una key única que se crea y luego guarda los resultados.
+# La data resultante representa una parte de la data y no la totalidad de entrada.
+
 ##Cargar dataframes de gsheets
 df_goals = gsheet_to_dataframe(SPREADSHEET_ID,SHEET_RANGES['goal'])
 df_lead = gsheet_to_dataframe(SPREADSHEET_ID,SHEET_RANGES['event'])
@@ -40,4 +43,4 @@ sheet_headers = result.columns.values.tolist()
 sheet_values = result.values.tolist()
 sheet_values.insert(0, sheet_headers)
 
-write_gsheet(SS_TO_WRITE_ID,'Result!A1:D',sheet_values)
+write_gsheet(SS_TO_WRITE_ID,'Base!A1:D',sheet_values)
