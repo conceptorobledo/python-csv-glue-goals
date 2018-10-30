@@ -6,6 +6,7 @@ from connect import gsheet_to_dataframe, write_gsheet
 
 # Toma data de Gsheets, cruza la información por una key única que se crea y luego guarda los resultados.
 # La data resultante representa una parte de la data y no la totalidad de entrada.
+# Este script consolida una base para luego proporcionalmente agregar metas.
 
 ##Cargar dataframes de gsheets
 df_goals = gsheet_to_dataframe(SPREADSHEET_ID,SHEET_RANGES['goal'])
@@ -36,7 +37,7 @@ print(df_leadgoal.groupby('Source / Medium')['Unique Events'].sum().sort_values(
 print('----------- GOALS -----------')
 print(df_leadgoalcl.groupby('Source / Medium')['key'].count())
 
-# Tomar columnas para escribir
+## Tomar columnas para escribir
 result = df_leadgoal[['Month of Year','Day of the month','Source / Medium','Unique Events']]
 
 sheet_headers = result.columns.values.tolist()
@@ -44,3 +45,5 @@ sheet_values = result.values.tolist()
 sheet_values.insert(0, sheet_headers)
 
 write_gsheet(SS_TO_WRITE_ID,'Base!A1:D',sheet_values)
+
+print('updated' + SPREADSHEET_ID)
