@@ -28,8 +28,6 @@ df_leadcl = df_lead[df_lead['Source / Medium'] != 'intranet.ssura.cl / referral'
 df_leadcl = df_leadcl[df_leadcl['Source / Medium'] != 'www-publimetro-cl.cdn.ampproject.org / referral']
 ## Extrae leads con keys que esten en goals
 df_leadgoal = df_leadcl.loc[df_leadcl['key'].isin(df_goals['key'])]
-""" print(df_goals.groupby('key')['ga:goal4Completions'].count())
- """
 df_leadgoalcl =  df_leadgoal.sort_values('Unique Events', ascending=False).drop_duplicates(['Source / Medium','key']).copy()
 
 n_goals = df_goals['ga:goal4Completions'].astype(np.int64).sum()
@@ -44,19 +42,19 @@ print(n_leads_with_key/n_goals)
 """
 print('----------- LEADS -----------')
 print(df_lead.groupby('Source / Medium')['Unique Events'].sum().sort_values(ascending=False))
-"""
 print('----------- LEAD integrados a GOALS -----------')
 print(group_leadgoals) 
-
-
+"""
 ## Tomar columnas para escribir
 result = df_leadgoal[['Month of Year','Day of the month','Source / Medium','Unique Events']]
 result_pcts = df_leadgoalcl.groupby(['Month of Year','Day of the month','Source / Medium'])['Unique Events'].sum().groupby(level=0).apply(lambda x: x/total_leadgoals.sum()).reset_index()
 
 ## DF con objetivos cumplidos diarios para ser unidos proporcionalmente con el día / canal
-df_goals_daily = df_goals[['Month of Year','Day of the month','ga:goal4Completions']]
+df_goals['ga:goal4Completions'] = df_goals['ga:goal4Completions'].astype(np.int64)
+df_daily_goals = df_goals.groupby(['Month of Year','Day of the month'])['ga:goal4Completions'].sum().reset_index()
 
 
+result_pcts['Ventas'] = result_pcts['Unique Events']
 
 sheet_headers = result.columns.values.tolist()
 sheet_values = result.values.tolist()
