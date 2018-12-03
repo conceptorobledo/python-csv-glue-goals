@@ -1,4 +1,3 @@
-## Hasta 30 de Octubre
 
 import pandas as pd
 import numpy as np
